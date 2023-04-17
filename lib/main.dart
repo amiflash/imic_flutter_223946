@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:view_and_layout_sample/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:view_and_layout_sample/entrances/models/user_info.dart';
+import 'package:view_and_layout_sample/entrances/screens/home_screen.dart';
+import 'package:view_and_layout_sample/entrances/screens/register_screen.dart';
+import 'package:view_and_layout_sample/entrances/screens/welcome_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+late SharedPreferences pref;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  pref =  await SharedPreferences.getInstance();
+
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+  
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
 
+
+}
+
+class _MyAppState extends State<MyApp> {
+  
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+  Widget mainScreen = (pref.getBool('kLogined') ?? false) ? HomeScreen(userInfo: UserInfo(userName: '', email: '')) : WelcomeScreen();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -26,7 +45,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home:  LoginScreen(title: 'Register'),
+      home:  mainScreen,
     );
   }
 }

@@ -2,11 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:view_and_layout_sample/entrances/models/user_info.dart';
+import 'package:view_and_layout_sample/entrances/screens/home_screen.dart';
+import 'package:view_and_layout_sample/main.dart';
+import 'package:view_and_layout_sample/workouts_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   final String title;
+  final Function onLoginPress;
 
-  LoginScreen({super.key, required this.title});
+  RegisterScreen({super.key, required this.title, required this.onLoginPress});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -18,10 +23,10 @@ class LoginScreen extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   late String title;
   late bool isTermAccepted;
   bool isPasswordShowing = false;
@@ -59,7 +64,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Container(
@@ -67,7 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Expanded(
               child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(10),
+                scrollDirection: Axis.vertical,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -79,8 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildEmailInput(),
                     _buildPasswordInput(),
                     _buildConfirmPasswordInput(),
-                    _buildPasswordValidations(),
-                    _buildPasswordValidations(),
                     _buildPasswordValidations(),
                     _buildTermsAndConditions(),
                   ],
@@ -328,7 +332,17 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       child: TextButton(
           onPressed: () {
-            if (isRegistrationEnable) {}
+            if (isRegistrationEnable) {
+                UserInfo userInfo = this.createUserInfo();
+
+                pref.setBool('kLogined', true);
+
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(userInfo: userInfo,),)).then((value) {
+                  setState(() {
+                    
+                  });
+                });
+            }
           },
           child: Container(
               height: 44,
@@ -356,7 +370,9 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         children: [
           Text('Already have an account?'),
-          TextButton(onPressed: () {}, child: Container(child: Text('Login')))
+          TextButton(onPressed: () {
+            widget.onLoginPress();
+          }, child: Container(child: Text('Login')))
         ],
       ),
     );
@@ -405,6 +421,11 @@ class _LoginScreenState extends State<LoginScreen> {
         emailValidation &
         isTermAccepted &
         isGetPromotionAccepted;
+  }
+
+  UserInfo createUserInfo() {
+    UserInfo userInfo = UserInfo(userName: userName, email: email);
+    return userInfo;
   }
 
   Future<void> _showAlertDialog() async {

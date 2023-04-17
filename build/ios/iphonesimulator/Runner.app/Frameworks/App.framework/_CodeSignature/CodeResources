@@ -10,7 +10,7 @@
 		</data>
 		<key>flutter_assets/AssetManifest.json</key>
 		<data>
-		SV4LP3ySx7yD/dbsq9IA8gD/XRs=
+		qFaTMm7hK3GLOpzY3XrqsYsyEwg=
 		</data>
 		<key>flutter_assets/FontManifest.json</key>
 		<data>
@@ -18,7 +18,23 @@
 		</data>
 		<key>flutter_assets/NOTICES.Z</key>
 		<data>
-		wDH5D2bRg/hlIvlEWVSBPdmDqDY=
+		N9DCcY2CCSE4nEU/g86SC1d1Iro=
+		</data>
+		<key>flutter_assets/assets/images/.DS_Store</key>
+		<data>
+		NcEyadkM/cW0skhrmdjHN0If9Tg=
+		</data>
+		<key>flutter_assets/assets/images/Icon-run.png</key>
+		<data>
+		sMB2nfltcEgOrPWiB66tqevcvbM=
+		</data>
+		<key>flutter_assets/assets/images/entrance/bg-welcome.png</key>
+		<data>
+		nqXC9NdJckZ6bnS0tNsdTI9g53E=
+		</data>
+		<key>flutter_assets/assets/images/entrance/icon-avatar.png</key>
+		<data>
+		bVdLEEQFNuvyzEGoWSjjbhoCncs=
 		</data>
 		<key>flutter_assets/assets/images/icon-eye-slash.png</key>
 		<data>
@@ -46,7 +62,7 @@
 		</data>
 		<key>flutter_assets/kernel_blob.bin</key>
 		<data>
-		j5YDbxaUs+Dp3+TRqSMOyQ01qaQ=
+		GF40EPbCL2kFdTpMyAEB3vphegg=
 		</data>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
 		<data>
@@ -67,7 +83,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			dUuU8UtiTzsYW+y79EVcLo86XajqsEXQ+jdkvdsuCgk=
+			YGnS5147LJ73xDDABargDcDWSpnYMLrrP7yHaTVVQ1g=
 			</data>
 		</dict>
 		<key>flutter_assets/FontManifest.json</key>
@@ -81,7 +97,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			PpxwDKta79EyoX5iSFRt4iNU/WE97quqaG2Nz+pmiAs=
+			UFPArgfbyhxY0CwCSYqwYn1y0xz6gehBjxYwyV3DiZM=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/Icon-run.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			coLIvEOZe+fsBS75IDG7UVGT6QyRyed1frp0wcHruL0=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/entrance/bg-welcome.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			1GfTsn+XQU9Lsv9HFdDKL7WOTEGQcvdTDlU8oAgMAFA=
+			</data>
+		</dict>
+		<key>flutter_assets/assets/images/entrance/icon-avatar.png</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			2jYtRiqNfJQQ5rj6E7h+GQh5L4E3rTUkm7dyq/wX67w=
 			</data>
 		</dict>
 		<key>flutter_assets/assets/images/icon-eye-slash.png</key>
@@ -130,7 +167,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			vA5T4rnUMRLLgZl65jOKLvlUbgn3oeYwZa2Lu4YXxvo=
+			GapxdteiCK9h/7LptkqJMPkpeVS5KfDWYzwk4fDU0iU=
 			</data>
 		</dict>
 		<key>flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf</key>
