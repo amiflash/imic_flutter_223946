@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:view_and_layout_sample/entrances/helpers/file_manager.dart';
 import 'package:view_and_layout_sample/entrances/models/user_info.dart';
 import 'package:view_and_layout_sample/entrances/screens/welcome_screen.dart';
+import 'package:view_and_layout_sample/main.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserInfo userInfo;
@@ -17,12 +22,22 @@ EditProfileScreen({super.key,
 class _EditProfileScreenState extends State<EditProfileScreen> {
   late UserInfo _userInfo;
   String userName = '';
+  File? avatarImageFile;
 
 @override
 void initState() {
     // TODO: implement initState
     super.initState();
     _userInfo = widget.userInfo;
+
+    FileManager.instance.retrieveImage('avatar_photo').then((value) {
+        if (value != null) {
+           setState(() {
+              avatarImageFile = value;
+           });
+        }
+    });
+
   }
 
   @override
@@ -46,6 +61,7 @@ void initState() {
             children: [
               SizedBox(height: 50,),
               _buildUsernameInput(),
+              _buildAvatar(),
               _buildSaveButton(),
               SizedBox(height: 20,),
               _buildLogoutButton()
@@ -73,6 +89,36 @@ void initState() {
 
       },
     ));
+  }
+
+  Widget _buildAvatar() {
+    String imageName = (avatarImageFile == null) ?  
+    'assets/images/entrance/icon-avatar.png' : 
+    avatarImageFile!.path;
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: InkWell(
+      child: CircleAvatar(
+                radius: 65,
+                foregroundImage: AssetImage(
+                  imageName,
+                  ) 
+                ),
+                onTap: () {
+                    showGallery();
+                },
+    )
+    );
+  }
+
+  void showGallery() {
+      final ImagePicker picker = ImagePicker();
+// Pick an image.
+    picker.pickImage(source: ImageSource.gallery).then((value) {
+      setState(() {
+         avatarImageFile = File(value!.path);
+      });
+       });
   }
 
    Widget _buildSaveButton() {
@@ -138,10 +184,16 @@ void initState() {
   void doSaveUserInfo() {
     _userInfo.userName = userName;
 
+     FileManager.instance.saveImage(File(avatarImageFile!.path), 'avatar_photo').then((value) {
+         
+            print('new avatar file: ${avatarImageFile!.path}');
+        });
+
     Navigator.of(context).pop(_userInfo);
   }
 
   void doLogout() {
+   pref.setBool('kLogined', false);
     Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => WelcomeScreen(),
