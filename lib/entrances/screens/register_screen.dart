@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:view_and_layout_sample/entrances/models/user_info.dart';
 import 'package:view_and_layout_sample/entrances/screens/home_screen.dart';
 import 'package:view_and_layout_sample/main.dart';
+import 'package:view_and_layout_sample/models/user.dart';
+import 'package:view_and_layout_sample/providers/user_provider.dart';
 import 'package:view_and_layout_sample/workouts_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -37,6 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String email = '';
   String passwowrd = '';
   String confirmPassword = '';
+  final UserProvider userProvider = UserProvider();
 
   @override
   void initState() {
@@ -333,15 +336,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: TextButton(
           onPressed: () {
             if (isRegistrationEnable) {
-                UserInfo userInfo = this.createUserInfo();
+              if (userProvider.userByUserNameExisting(userName)) {
+                  _showAlertDialog();
+              } else {
+                createUser();
 
-                pref.setBool('kLogined', true);
+               // pref.setBool('kLogined', true);
 
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(userInfo: userInfo,),)).then((value) {
-                  setState(() {
-                    
-                  });
-                });
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(),));
+            }
             }
           },
           child: Container(
@@ -423,9 +426,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         isGetPromotionAccepted;
   }
 
-  UserInfo createUserInfo() {
-    UserInfo userInfo = UserInfo(userName: userName, email: email);
-    return userInfo;
+  User createUser() {
+
+    User user = userProvider.createUser(userName, email);
+    return user;
   }
 
   Future<void> _showAlertDialog() async {
@@ -434,17 +438,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Cancel booking'),
-          content: Text('Are you sure want to cancel booking?'),
+          title: const Text('Error'),
+          content: Text('This username is existing. Please input new username'),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

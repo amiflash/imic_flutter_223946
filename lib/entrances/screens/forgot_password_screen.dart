@@ -266,13 +266,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       child: TextButton(
           onPressed: () {
             if (isRegistrationEnable) {
-                UserInfo userInfo = this.createUserInfo();
-
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(userInfo: userInfo,),)).then((value) {
-                  setState(() {
-                    
-                  });
-                });
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen(),));
             }
           },
           child: Container(
@@ -330,11 +324,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         hasUppercase &
         hasSpecialCharacters &
         emailValidation;
-  }
-
-  UserInfo createUserInfo() {
-    UserInfo userInfo = UserInfo(userName: '', email: '');
-    return userInfo;
   }
 
   Future<void> _showAlertDialog() async {

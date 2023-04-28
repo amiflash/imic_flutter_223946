@@ -3,41 +3,48 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:view_and_layout_sample/entrances/helpers/file_manager.dart';
 import 'package:view_and_layout_sample/entrances/models/user_info.dart';
 import 'package:view_and_layout_sample/entrances/screens/welcome_screen.dart';
+import 'package:view_and_layout_sample/helpers/file_manager.dart';
 import 'package:view_and_layout_sample/main.dart';
+import 'package:view_and_layout_sample/models/user.dart';
+import 'package:view_and_layout_sample/providers/user_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  final UserInfo userInfo;
+  final User user;
 
-EditProfileScreen({super.key,
- required this.userInfo});
+  EditProfileScreen({super.key, required this.user});
 
   @override
   State<StatefulWidget> createState() => _EditProfileScreenState();
-
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late UserInfo _userInfo;
+  late User _user;
   String userName = '';
   File? avatarImageFile;
+  late TextEditingController userNameTextController;
+  String avatarImageName = '';
+  UserProvider _userProvider = UserProvider();
 
-@override
-void initState() {
+  @override
+  void initState() {
     // TODO: implement initState
     super.initState();
-    _userInfo = widget.userInfo;
+    _user = widget.user;
+    userName = _user.userName;
 
-    FileManager.instance.retrieveImage('avatar_photo').then((value) {
-        if (value != null) {
-           setState(() {
-              avatarImageFile = value;
-           });
-        }
+    userNameTextController = TextEditingController(text: userName);
+
+    FileManager.instance
+        .retrieveImage(_user.avatarURL ?? 'avatar_photo')
+        .then((value) {
+      if (value != null) {
+        setState(() {
+          avatarImageFile = value;
+        });
+      }
     });
-
   }
 
   @override
@@ -46,83 +53,93 @@ void initState() {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 200,
-        leading: InkWell(onTap: () {
-            Navigator.of(context).pop();
-        },
-          child:  Row(children: [
-            SizedBox(width: 15,),
-          Icon(Icons.arrow_back_ios),
-          Text('@${_userInfo.userName}', style: TextStyle(fontSize: 20),)
-
-        ],),),
-      ),
-      body: Container(
-          child: Column(
+        leading: InkWell(
+          onTap: () {
+            Navigator.of(context).pop(_user);
+          },
+          child: Row(
             children: [
-              SizedBox(height: 50,),
-              _buildUsernameInput(),
-              _buildAvatar(),
-              _buildSaveButton(),
-              SizedBox(height: 20,),
-              _buildLogoutButton()
+              SizedBox(
+                width: 15,
+              ),
+              Icon(Icons.arrow_back_ios),
+              Text(
+                '@${_user.userName}',
+                style: TextStyle(fontSize: 20),
+              )
             ],
           ),
+        ),
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            _buildUsernameInput(),
+            _buildAvatar(),
+            _buildSaveButton(),
+            SizedBox(
+              height: 20,
+            ),
+            _buildLogoutButton()
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildUsernameInput() {
     return Container(
-      margin: EdgeInsets.all(16),
+        margin: EdgeInsets.all(16),
         child: TextField(
-      decoration: InputDecoration(hintText: '@Username'),
-      style: TextStyle(
-          color: Color(0xff414141),
-          fontSize: 14,
-          fontWeight: FontWeight.normal),
-      onChanged: (value) {
-       setState(() {
-         userName = value;
-       });
-      },
-      onSubmitted: (value) {
-
-      },
-    ));
+          controller: userNameTextController,
+          decoration: InputDecoration(hintText: '@Username'),
+          style: TextStyle(
+              color: Color(0xff414141),
+              fontSize: 14,
+              fontWeight: FontWeight.normal),
+          onChanged: (value) {
+            setState(() {
+              userName = value;
+            });
+          },
+          onSubmitted: (value) {},
+        ));
   }
 
   Widget _buildAvatar() {
-    String imageName = (avatarImageFile == null) ?  
-    'assets/images/entrance/icon-avatar.png' : 
-    avatarImageFile!.path;
+    String imageName = (avatarImageFile == null)
+        ? 'assets/images/entrance/icon-avatar.png'
+        : avatarImageFile!.path;
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      child: InkWell(
-      child: CircleAvatar(
-                radius: 65,
-                foregroundImage: AssetImage(
-                  imageName,
-                  ) 
-                ),
-                onTap: () {
-                    showGallery();
-                },
-    )
-    );
+        margin: EdgeInsets.symmetric(vertical: 20),
+        child: InkWell(
+          child: CircleAvatar(
+              radius: 65,
+              foregroundImage: AssetImage(
+                imageName,
+              )),
+          onTap: () {
+            showGallery();
+          },
+        ));
   }
 
   void showGallery() {
-      final ImagePicker picker = ImagePicker();
+    final ImagePicker picker = ImagePicker();
 // Pick an image.
     picker.pickImage(source: ImageSource.gallery).then((value) {
       setState(() {
-         avatarImageFile = File(value!.path);
+        avatarImageFile = File(value!.path);
+        avatarImageName = avatarImageFile?.uri.pathSegments.last ?? '';
       });
-       });
+    });
   }
 
-   Widget _buildSaveButton() {
-    Color bgColor =  userName.isEmpty ? Color(0xffD9C5FA) :Color(0xff823cff);
+  Widget _buildSaveButton() {
+    Color bgColor = userName.isEmpty ? Color(0xffD9C5FA) : Color(0xff823cff);
 
     return Container(
       child: TextButton(
@@ -159,7 +176,7 @@ void initState() {
     return Container(
       child: TextButton(
           onPressed: () {
-          this.doLogout();
+            this.doLogout();
           },
           child: Container(
               height: 44,
@@ -182,22 +199,27 @@ void initState() {
   }
 
   void doSaveUserInfo() {
-    _userInfo.userName = userName;
+    FileManager.instance
+        .saveImage(File(avatarImageFile!.path), avatarImageName)
+        .then((value) {
+        print('new avatar file: ${value.path},');
+         _userProvider.updateUserNameAndAvatarURL(
+        userName,value.uri.pathSegments.last , _user.id)!;
+         Future.delayed(Duration(milliseconds: 300), () {
+           Navigator.of(context).pop(_user);
+         });
+    });
 
-     FileManager.instance.saveImage(File(avatarImageFile!.path), 'avatar_photo').then((value) {
-         
-            print('new avatar file: ${avatarImageFile!.path}');
-        });
-
-    Navigator.of(context).pop(_userInfo);
+   
   }
 
   void doLogout() {
-   pref.setBool('kLogined', false);
+    // pref.setBool('kLogined', false);
+    _userProvider.updateLoginStatus(_user.id, false);
     Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => WelcomeScreen(),
-    ),
-  );
+      MaterialPageRoute(
+        builder: (context) => WelcomeScreen(),
+      ),
+    );
   }
 }

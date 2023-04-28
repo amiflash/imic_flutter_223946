@@ -7,12 +7,21 @@ import 'package:view_and_layout_sample/entrances/models/user_info.dart';
 import 'package:view_and_layout_sample/entrances/screens/home_screen.dart';
 import 'package:view_and_layout_sample/entrances/screens/register_screen.dart';
 import 'package:view_and_layout_sample/entrances/screens/welcome_screen.dart';
+import 'package:view_and_layout_sample/providers/user_provider.dart';
+
+import 'objectbox.dart';
 
 late SharedPreferences pref;
+late ObjectBox objectbox;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   pref =  await SharedPreferences.getInstance();
+  objectbox = await ObjectBox.create();
+
+   final docsDir = await getApplicationDocumentsDirectory();
+
+   print('doc dir: $docsDir');
 
   runApp(MyApp());
 }
@@ -29,10 +38,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   
   // This widget is the root of your application.
+
+  UserProvider userProvider = UserProvider();
   @override
   Widget build(BuildContext context) {
 
-  Widget mainScreen = (pref.getBool('kLogined') ?? false) ? HomeScreen(userInfo: UserInfo(userName: '', email: '')) : WelcomeScreen();
+  Widget mainScreen = (userProvider.checkIfUserExisting()) ? HomeScreen() : WelcomeScreen();
 
     return MaterialApp(
       title: 'Flutter Demo',

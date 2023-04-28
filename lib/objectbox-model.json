@@ -1,0 +1,114 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:4153374541117734265",
+      "lastPropertyId": "10:1835684013088385677",
+      "name": "User",
+      "properties": [
+        {
+          "id": "1:2358423038922779861",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:934281734564569608",
+          "name": "userName",
+          "type": 9
+        },
+        {
+          "id": "3:6242599805763209026",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "4:7468492721876003902",
+          "name": "avatarURL",
+          "type": 9
+        },
+        {
+          "id": "5:6486141746945294374",
+          "name": "sex",
+          "type": 9
+        },
+        {
+          "id": "6:5919561745728808592",
+          "name": "dateOfBird",
+          "type": 9
+        },
+        {
+          "id": "7:6195675792683251305",
+          "name": "height",
+          "type": 8
+        },
+        {
+          "id": "8:562741981700492961",
+          "name": "weight",
+          "type": 8
+        },
+        {
+          "id": "9:4724356856723799304",
+          "name": "isLogined",
+          "type": 1
+        },
+        {
+          "id": "10:1835684013088385677",
+          "name": "avartarURL",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5470145747435685612",
+      "lastPropertyId": "5:4073223141328070304",
+      "name": "Workout",
+      "properties": [
+        {
+          "id": "1:1051349181207154418",
+          "name": "workoutId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5432039620532538930",
+          "name": "workoutTitle",
+          "type": 9
+        },
+        {
+          "id": "3:3255210947770624775",
+          "name": "distance",
+          "type": 9
+        },
+        {
+          "id": "4:5804856940186109761",
+          "name": "duration",
+          "type": 9
+        },
+        {
+          "id": "5:4073223141328070304",
+          "name": "userId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:5207964334979753865",
+          "relationTarget": "User"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:5470145747435685612",
+  "lastIndexId": "1:5207964334979753865",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

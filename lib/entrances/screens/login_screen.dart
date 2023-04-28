@@ -4,6 +4,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:view_and_layout_sample/entrances/models/user_info.dart';
 import 'package:view_and_layout_sample/entrances/screens/home_screen.dart';
+import 'package:view_and_layout_sample/models/user.dart';
+import 'package:view_and_layout_sample/providers/user_provider.dart';
 import 'package:view_and_layout_sample/workouts_screen.dart';
 
 import '../../main.dart';
@@ -33,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String uoEmail = '';
   String passwowrd = '';
+  final UserProvider userProvider = UserProvider();
 
   @override
   void initState() {
@@ -121,7 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
           color: Color(0xff414141),
           fontSize: 14,
           fontWeight: FontWeight.normal),
-      onChanged: (value) {},
+      onChanged: (value) {
+        uoEmail = value;
+      },
       onSubmitted: (value) {},
     ));
   }
@@ -163,19 +168,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Container(
       child: TextButton(
           onPressed: () {
-            UserInfo userInfo = this.createUserInfo();
+            
+            doLogin();
 
-            pref.setBool('kLogined', true);
-
-            Navigator.of(context)
-                .push(MaterialPageRoute(
-              builder: (context) => HomeScreen(
-                userInfo: userInfo,
-              ),
-            ))
-                .then((value) {
-              setState(() {});
-            });
+            //pref.setBool('kLogined', true);
           },
           child: Container(
               height: 44,
@@ -213,11 +209,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  UserInfo createUserInfo() {
-    UserInfo userInfo =
-        UserInfo(userName: 'binhle', email: 'binh.le@gmail.com');
-    return userInfo;
-  }
 
   Future<void> _showAlertDialog() async {
     return showDialog<void>(
@@ -225,17 +216,11 @@ class _LoginScreenState extends State<LoginScreen> {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Cancel booking'),
-          content: Text('Are you sure want to cancel booking?'),
+          title: const Text('Error'),
+          content: Text('This username is not exist.'),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -244,5 +229,26 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
+  }
+
+  void doLogin() {
+    if (userProvider.userByUserNameExisting(uoEmail)) {
+      User? user = userProvider.getUserByUserName(uoEmail);
+
+      if (user != null) {
+        userProvider.updateLoginStatus(user.id, true);
+      }
+       Navigator.of(context)
+                .push(MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ))
+                .then((value) {
+              setState(() {});
+            });
+
+            return;
+    } 
+
+      _showAlertDialog();
   }
 }
