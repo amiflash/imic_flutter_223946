@@ -1,17 +1,50 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:view_and_layout_sample/login_screen.dart';
+import 'dart:io';
 
-void main() {
-  runApp(const MyApp());
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:view_and_layout_sample/entrances/models/user_info.dart';
+import 'package:view_and_layout_sample/entrances/screens/home_screen.dart';
+import 'package:view_and_layout_sample/entrances/screens/register_screen.dart';
+import 'package:view_and_layout_sample/entrances/screens/welcome_screen.dart';
+import 'package:view_and_layout_sample/providers/user_provider.dart';
+
+import 'objectbox.dart';
+
+late SharedPreferences pref;
+late ObjectBox objectbox;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  pref =  await SharedPreferences.getInstance();
+  objectbox = await ObjectBox.create();
+
+   final docsDir = await getApplicationDocumentsDirectory();
+
+   print('doc dir: $docsDir');
+
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+  
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
 
+
+}
+
+class _MyAppState extends State<MyApp> {
+  
   // This widget is the root of your application.
+
+  UserProvider userProvider = UserProvider();
   @override
   Widget build(BuildContext context) {
+
+  Widget mainScreen = (userProvider.checkIfUserExisting()) ? HomeScreen() : WelcomeScreen();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -26,7 +59,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home:  LoginScreen(title: 'Register'),
+      home:  mainScreen,
     );
   }
 }
+
